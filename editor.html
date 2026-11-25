@@ -1,0 +1,1350 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor Undangan Digital Pro</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font: 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
+  display: grid;
+  grid-template-columns: minmax(360px, 480px) 1fr;
+  height: 100dvh;
+  overflow: hidden;
+  background: #f0f0f2;
+}
+
+/* Sidebar Form Container */
+#sidebar {
+  background: #fff;
+  border-right: 1px solid #e2e2e8;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.header-bar {
+  padding: 14px 16px;
+  background: #1e1e24;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.header-bar h1 { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+.header-actions { display: flex; gap: 6px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: #f4f4f7;
+  border-bottom: 1px solid #e0e0e6;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: #1e1e24; }
+.tab-btn.active {
+  color: #1e1e24;
+  font-weight: 600;
+  background: #fff;
+  border-bottom-color: #c29d59;
+}
+
+/* Tab Panels Scrollable Area */
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: none;
+}
+.tab-content.active { display: block; }
+
+/* Fieldsets & Form Controls */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e1e24;
+  margin: 16px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-title:first-child { margin-top: 0; }
+.field-group { margin-bottom: 12px; }
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a4a52;
+}
+input[type="text"], input[type="number"], select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d0d0d8;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13.5px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #c29d59;
+  box-shadow: 0 0 0 2px rgba(194, 157, 89, 0.2);
+}
+
+/* Color Pickers Grid */
+.color-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.color-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8f8fa;
+  border: 1px solid #e6e6ec;
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+.color-item input[type="color"] {
+  border: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+}
+.color-item span { font-size: 12px; font-weight: 500; }
+
+/* Preset Themes Pills */
+.theme-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.theme-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #dcdce2;
+  background: #fff;
+  font-size: 11.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.theme-pill:hover { border-color: #c29d59; background: #faf9f6; }
+.theme-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Image Pickers & Previews */
+.img-picker-card {
+  background: #fbfbfd;
+  border: 1px solid #e4e4eb;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+.img-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.img-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #eee;
+  border: 1px solid #ddd;
+}
+.file-upload-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #f0f0f4;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.file-upload-btn:hover { background: #e5e5eb; }
+
+/* Gallery Manager Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+.gallery-slot {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background: #eee;
+}
+.gallery-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-slot button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 0;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Lists (Events, Gifts) */
+.card-item {
+  background: #fafafc;
+  border: 1px solid #e2e2ea;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.card-item .btn-del {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 0;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-primary { background: #c29d59; color: #fff; }
+.btn-primary:hover { background: #ab8847; }
+.btn-dark { background: #2c2825; color: #fff; }
+.btn-dark:hover { background: #443e3a; }
+.btn-outline { background: #fff; border-color: #d0d0d8; color: #333; }
+.btn-outline:hover { background: #f5f5f7; }
+.btn-add {
+  width: 100%;
+  padding: 8px;
+  background: #f0f4ff;
+  color: #2563eb;
+  border: 1px dashed #93c5fd;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 4px;
+  cursor: pointer;
+}
+.btn-add:hover { background: #e0e7ff; }
+
+/* Range Slider */
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slider-group input[type="range"] { flex: 1; accent-color: #c29d59; cursor: pointer; }
+.slider-group span { font-size: 12px; font-weight: 600; min-width: 40px; text-align: right; }
+
+/* Right Panel: Preview */
+#preview-area {
+  background: #cfcfca;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#preview-topbar {
+  padding: 8px 12px;
+  background: #fff;
+  border-bottom: 1px solid #d4d4d8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.device-btns { display: flex; gap: 4px; }
+.device-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background: #f4f4f6;
+  cursor: pointer;
+}
+.device-btn.active { background: #2c2825; color: #fff; border-color: #2c2825; }
+
+#iframe-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+iframe {
+  border: 0;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+
+#btn-mobile-toggle { display: none; }
+
+@media (max-width: 840px) {
+  body { grid-template-columns: 1fr; }
+  #preview-area { display: none; }
+  body.mobile-pvw #sidebar { display: none; }
+  body.mobile-pvw #preview-area { display: flex; }
+  #btn-mobile-toggle { display: inline-block; }
+}
+</style>
+</head>
+<body>
+
+<!-- Left: Customizer Sidebar -->
+<div id="sidebar">
+  <div class="header-bar">
+    <h1>Editor Undangan</h1>
+    <div class="header-actions">
+      <button class="btn-sm btn-outline" id="btn-reset" title="Kembalikan ke data asli">Reset</button>
+      <button class="btn-sm btn-dark" id="btn-export-html" title="Unduh index.html untuk preview WhatsApp">index.html</button>
+      <button class="btn-sm btn-primary" id="btn-save" title="Unduh data.js untuk disimpan ke folder">Simpan data.js</button>
+      <button class="btn-sm btn-outline" id="btn-mobile-toggle">Lihat Preview</button>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-theme">🎨 Tema & Warna</button>
+    <button class="tab-btn" data-tab="tab-font">✍️ Font</button>
+    <button class="tab-btn" data-tab="tab-anim">✨ Animasi</button>
+    <button class="tab-btn" data-tab="tab-media">🖼️ Foto & Galeri</button>
+    <button class="tab-btn" data-tab="tab-mempelai">💑 Mempelai</button>
+    <button class="tab-btn" data-tab="tab-story">📖 Our Story</button>
+    <button class="tab-btn" data-tab="tab-acara">📅 Acara & Lokasi</button>
+    <button class="tab-btn" data-tab="tab-hadiah">🎁 Hadiah</button>
+    <button class="tab-btn" data-tab="tab-rsvp">💌 RSVP & Fitur</button>
+    <button class="tab-btn" data-tab="tab-links">🔗 Tamu & Share</button>
+  </div>
+
+  <!-- TAB 1: Tema & Warna -->
+  <div class="tab-content active" id="tab-theme">
+    <div class="section-title">Preset Tema Cepat</div>
+    <div class="theme-presets">
+      <div class="theme-pill" data-theme="marun"><span class="theme-dot" style="background:#6b1d2b"></span>Marun & Biru Debu</div>
+      <div class="theme-pill" data-theme="rose"><span class="theme-dot" style="background:#9a4a5a"></span>Mawar Tua</div>
+      <div class="theme-pill" data-theme="sage"><span class="theme-dot" style="background:#3f5a47"></span>Hijau Sage</div>
+      <div class="theme-pill" data-theme="navy"><span class="theme-dot" style="background:#1f3556"></span>Navy & Emas</div>
+      <div class="theme-pill" data-theme="charcoal"><span class="theme-dot" style="background:#2c2c30"></span>Charcoal</div>
+    </div>
+
+    <div class="section-title">Palet Warna Kustom</div>
+    <div class="color-grid">
+      <div class="color-item">
+        <input type="color" id="c-ink">
+        <div>
+          <span>Teks Utama</span>
+          <div style="font-size:10px;color:#888" id="c-ink-val">#2c2825</div>
+        </div>
+      </div>
+      <div class="color-item">
+        <input type="color" id="c-bg">
+        <div>
+          <span>Warna Kertas / BG</span>
+          <div style="font-size:10px;color:#888" id="c-bg-val">#fbfaf7</div>
+        </div>
+      </div>
+      <div class="color-item">
+        <input type="color" id="c-gold">
+        <div>
+          <span>Aksen Utama</span>
+          <div style="font-size:10px;color:#888" id="c-gold-val">#6b1d2b</div>
+        </div>
+      </div>
+      <div class="color-item">
+        <input type="color" id="c-gold2">
+        <div>
+          <span>Aksen Kedua</span>
+          <div style="font-size:10px;color:#888" id="c-gold2-val">#a9c0da</div>
+        </div>
+      </div>
+      <div class="color-item">
+        <input type="color" id="c-card">
+        <div>
+          <span>Kartu & Kolom Isian</span>
+          <div style="font-size:10px;color:#888" id="c-card-val">#ffffff</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Background Bagian Gelap (Cover, Ayat & Penutup)</label>
+      <select id="sel-dark-bg">
+        <option value="">Otomatis dari Aksen Utama (Default)</option>
+        <option value="linear-gradient(150deg, #262422 0%, #1c1a18 100%)">Warm Charcoal Gradient</option>
+        <option value="linear-gradient(150deg, #1b2838 0%, #0d1520 100%)">Deep Midnight Blue</option>
+        <option value="linear-gradient(150deg, #2a2024 0%, #1a1216 100%)">Dark Burgundy</option>
+        <option value="linear-gradient(150deg, #1e2621 0%, #121814 100%)">Deep Forest Emerald</option>
+        <option value="#1c1c1c">Hitam Pekat Solid</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TAB 2: Font & Tipografi -->
+  <div class="tab-content" id="tab-font">
+    <div class="section-title">Font Judul & Nama</div>
+    <div class="field-group">
+      <label>Font Judul</label>
+      <select id="sel-font-script">
+        <option value="'Bodoni Moda', Georgia, serif">Bodoni Moda (Default, tegas & elegan)</option>
+        <option value="'Playfair Display', Georgia, serif">Playfair Display (Editorial)</option>
+        <option value="'Cormorant Garamond', serif">Cormorant Garamond (Klasik, lembut)</option>
+        <option value="'Fraunces', Georgia, serif">Fraunces (Hangat, ramah)</option>
+        <option value="'Cinzel', serif">Cinzel (Megah, tradisional)</option>
+      </select>
+    </div>
+
+    <div class="section-title">Font Teks / Isi</div>
+    <div class="field-group">
+      <label>Font Teks Utama</label>
+      <select id="sel-font-serif">
+        <option value="'Plus Jakarta Sans', system-ui, sans-serif">Plus Jakarta Sans (Default, modern & jelas)</option>
+        <option value="'Montserrat', sans-serif">Montserrat (Bersih & minimalis)</option>
+        <option value="'Lora', Georgia, serif">Lora (Serif nyaman dibaca)</option>
+      </select>
+    </div>
+
+    <div class="section-title">Tulisan Tangan (Nama Tamu di Cover)</div>
+    <div class="field-group">
+      <label>Font Tulisan Tangan</label>
+      <select id="sel-font-tulis">
+        <option value="">Reenie Beanie (Default)</option>
+        <option value="'Caveat', cursive">Caveat (Lebih mudah dibaca)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TAB 3: Animasi & Efek -->
+  <div class="tab-content" id="tab-anim">
+    <div class="section-title">Efek Partikel Layar</div>
+    <div class="field-group">
+      <label>Pilihan Animasi</label>
+      <select id="sel-anim-jenis">
+        <option value="petals">🌸 Kelopak Bunga (Petals)</option>
+        <option value="hearts">💖 Hati Cinta (Floating Hearts)</option>
+        <option value="sparkles">✨ Bintang Berkelip (Sparkles)</option>
+        <option value="confetti">🎊 Konfeti Emas (Golden Confetti)</option>
+        <option value="none">🚫 Tanpa Animasi</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Kecepatan / Durasi Animasi</label>
+      <div class="slider-group">
+        <input type="range" id="sl-anim-durasi" min="4" max="16" step="1" value="8">
+        <span id="val-anim-durasi">8s</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Kepadatan / Jumlah Partikel</label>
+      <div class="slider-group">
+        <input type="range" id="sl-anim-jumlah" min="6" max="28" step="2" value="14">
+        <span id="val-anim-jumlah">14</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Foto & Galeri -->
+  <div class="tab-content" id="tab-media">
+    <div class="section-title">Foto Utama & Mempelai</div>
+    <div class="img-picker-card">
+      <label>Foto Utama (Cover & Header)</label>
+      <div class="img-preview-box">
+        <img id="prev-foto-utama" class="img-thumb" src="" alt="">
+        <div>
+          <label class="file-upload-btn">
+            Ganti Foto
+            <input type="file" id="file-foto-utama" accept="image/*" style="display:none">
+          </label>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <label>Reposisi Vertikal Foto Utama</label>
+        <div class="slider-group">
+          <input type="range" id="sl-foto-posisi" min="0" max="100" value="50">
+          <span id="val-foto-posisi">50%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-picker-card">
+      <label>Foto Halaman Utama (di bawah nama)</label>
+      <div class="img-preview-box">
+        <img id="prev-foto-hero" class="img-thumb" src="" alt="">
+        <div>
+          <label class="file-upload-btn">
+            Ganti Foto
+            <input type="file" id="file-foto-hero" accept="image/*" style="display:none">
+          </label>
+          <p style="font-size:11px;color:#777;margin-top:4px">Kosong = pakai foto pertama galeri.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-picker-card">
+      <label>Foto Mempelai Wanita</label>
+      <div class="img-preview-box">
+        <img id="prev-foto-wanita" class="img-thumb" src="" alt="">
+        <div>
+          <label class="file-upload-btn">
+            Ganti Foto
+            <input type="file" id="file-foto-wanita" accept="image/*" style="display:none">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-picker-card">
+      <label>Foto Mempelai Pria</label>
+      <div class="img-preview-box">
+        <img id="prev-foto-pria" class="img-thumb" src="" alt="">
+        <div>
+          <label class="file-upload-btn">
+            Ganti Foto
+            <input type="file" id="file-foto-pria" accept="image/*" style="display:none">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Galeri Foto (Hitam Putih, Berwarna saat di Klik)</div>
+    <p style="font-size:12px;color:#666;margin-bottom:8px">Tambah foto baru dari perangkat atau URL:</p>
+    <div class="gallery-grid" id="galeri-list"></div>
+    <label class="btn-add" style="text-align:center;display:block">
+      + Upload Foto Baru ke Galeri
+      <input type="file" id="file-foto-galeri" accept="image/*" style="display:none">
+    </label>
+  </div>
+
+  <!-- TAB 5: Data Mempelai -->
+  <div class="tab-content" id="tab-mempelai">
+    <div class="section-title">Judul Undangan</div>
+    <div class="field-group">
+      <label>Judul Dokumen</label>
+      <input type="text" id="inp-judul">
+    </div>
+
+    <div class="section-title">Mempelai Wanita</div>
+    <div class="field-group">
+      <label>Nama Panggilan</label>
+      <input type="text" id="w-panggilan">
+    </div>
+    <div class="field-group">
+      <label>Nama Lengkap</label>
+      <input type="text" id="w-lengkap">
+    </div>
+    <div class="field-group">
+      <label>Nama Orang Tua</label>
+      <input type="text" id="w-orangtua">
+    </div>
+
+    <div class="section-title">Mempelai Pria</div>
+    <div class="field-group">
+      <label>Nama Panggilan</label>
+      <input type="text" id="p-panggilan">
+    </div>
+    <div class="field-group">
+      <label>Nama Lengkap</label>
+      <input type="text" id="p-lengkap">
+    </div>
+    <div class="field-group">
+      <label>Nama Orang Tua</label>
+      <input type="text" id="p-orangtua">
+    </div>
+
+    <div class="section-title">Salam & Kisah</div>
+    <div class="field-group">
+      <label>Kalimat Salam Pembuka</label>
+      <textarea id="inp-salam" rows="2"></textarea>
+    </div>
+    <div class="field-group">
+      <label>Kisah Pertemuan / Cerita</label>
+      <textarea id="inp-cerita" rows="3"></textarea>
+    </div>
+    <div class="field-group">
+      <label>Salam Penutup</label>
+      <textarea id="inp-penutup" rows="2"></textarea>
+    </div>
+  </div>
+
+  <!-- TAB: Our Story -->
+  <div class="tab-content" id="tab-story">
+    <div class="section-title">Our Story</div>
+    <div class="field-group"><label>Judul Bagian</label><input type="text" id="ks-judul"></div>
+    <div class="field-group"><label>Sub-judul (kosongkan untuk menyembunyikan)</label><input type="text" id="ks-sub"></div>
+    <div class="section-title">Bab Cerita</div>
+    <p style="font-size:12px;color:#666;margin-bottom:8px">Antar bab otomatis dipisah garis panjang. Foto tampil hitam-putih lalu berwarna saat di-scroll.</p>
+    <div id="kisah-list"></div>
+    <button class="btn-add" id="btn-add-kisah">+ Tambah Bab</button>
+  </div>
+
+  <!-- TAB 6: Acara & Lokasi -->
+  <div class="tab-content" id="tab-acara">
+    <div class="section-title">Tanggal Acara Utama</div>
+    <div class="field-group">
+      <label>Tanggal Teks (Tampilan)</label>
+      <input type="text" id="inp-tanggal-teks">
+    </div>
+    <div class="field-group">
+      <label>Tanggal ISO (Untuk Countdown)</label>
+      <input type="text" id="inp-tanggal-iso">
+    </div>
+
+    <div class="section-title">Rangkaian Acara</div>
+    <div id="acara-list"></div>
+    <button class="btn-add" id="btn-add-acara">+ Tambah Acara</button>
+
+    <div class="section-title">Lokasi Acara</div>
+    <div class="field-group">
+      <label>Nama Gedung / Tempat</label>
+      <input type="text" id="lok-nama">
+    </div>
+    <div class="field-group">
+      <label>Alamat Lengkap</label>
+      <textarea id="lok-alamat" rows="2"></textarea>
+    </div>
+    <div class="field-group">
+      <label>Link Google Maps</label>
+      <input type="text" id="lok-maps">
+    </div>
+
+    <div class="section-title">Dress Code</div>
+    <div class="field-group"><label><input type="checkbox" id="dc-aktif"> Tampilkan dress code</label></div>
+    <div class="field-group"><label>Judul</label><input type="text" id="dc-judul"></div>
+    <div class="field-group"><label>Keterangan</label><textarea id="dc-teks" rows="2"></textarea></div>
+    <div id="dc-list"></div>
+    <button class="btn-add" id="btn-add-dc">+ Tambah Warna</button>
+
+    <div class="section-title">Ayat / Kutipan Suci</div>
+    <div class="field-group">
+      <label>Sumber (Surat / Ayat)</label>
+      <input type="text" id="ayat-sumber">
+    </div>
+    <div class="field-group">
+      <label>Teks Ayat</label>
+      <textarea id="ayat-teks" rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- TAB 7: Hadiah & Amplop Digital -->
+  <div class="tab-content" id="tab-hadiah">
+    <div class="section-title">Rekening Bank / Dompet Digital</div>
+    <div id="hadiah-list"></div>
+    <button class="btn-add" id="btn-add-hadiah">+ Tambah Rekening</button>
+
+    <div class="section-title">Alamat Kirim Kado Fisik</div>
+    <div class="field-group">
+      <label>Alamat Pengiriman</label>
+      <textarea id="inp-alamat-kado" rows="2"></textarea>
+    </div>
+  </div>
+
+  <!-- TAB: RSVP & Fitur -->
+  <div class="tab-content" id="tab-rsvp">
+    <div class="section-title">Konfirmasi Kehadiran (RSVP)</div>
+    <div class="field-group">
+      <label><input type="checkbox" id="rsvp-aktif"> Tampilkan formulir hadir / tidak hadir</label>
+      <p style="font-size:11.5px;color:#777;margin-top:4px">Jika dimatikan, tamu hanya mengirim ucapan & doa.</p>
+    </div>
+    <div class="field-group"><label>Batas Konfirmasi (teks yang tampil)</label><input type="text" id="rsvp-batas" placeholder="Mohon konfirmasi sebelum 10 Desember 2026."></div>
+    <div class="field-group"><label>Maksimal Tamu per Konfirmasi (1–10)</label><input type="number" id="rsvp-maks" min="1" max="10"></div>
+
+    <div class="section-title">WhatsApp</div>
+    <div class="field-group">
+      <label>Nomor WhatsApp Penerima (format 62812…)</label>
+      <input type="text" id="inp-wa" placeholder="6281234567890">
+      <p style="font-size:11.5px;color:#777;margin-top:4px">Dipakai bila Web App URL Google Sheets belum diisi: konfirmasi dikirim lewat WhatsApp.</p>
+    </div>
+
+    <div class="section-title">Salam & Siaran Langsung</div>
+    <div class="field-group"><label>Salam Pembuka</label><input type="text" id="inp-salam-pembuka" placeholder="Assalamu’alaikum Warahmatullahi Wabarakatuh"></div>
+    <div class="field-group"><label>Link Siaran Langsung (kosongkan jika tidak ada)</label><input type="text" id="inp-stream-url" placeholder="https://youtube.com/live/…"></div>
+    <div class="field-group"><label>Teks Tombol Siaran Langsung</label><input type="text" id="inp-stream-teks"></div>
+  </div>
+
+  <!-- TAB 8: Tamu, WhatsApp & Bagikan -->
+  <div class="tab-content" id="tab-links">
+    <div class="section-title">Buat Link untuk Banyak Tamu</div>
+    <div class="field-group">
+      <label>URL Situs (mis. https://username.github.io/undangan/)</label>
+      <input type="text" id="bu" placeholder="Kosongkan jika lokal">
+    </div>
+    <div class="field-group">
+      <label>Daftar Nama Tamu (Satu nama per baris)</label>
+      <textarea id="gl" rows="5" placeholder="Bpk. Hendra&#10;Ibu Sari&#10;Sahabat Andi"></textarea>
+    </div>
+    <button class="btn-sm btn-dark" id="gb" style="width:100%;padding:10px">Salin Semua Link Tamu</button>
+
+    <div class="section-title" style="margin-top:20px">Preview Link di WhatsApp</div>
+    <div class="field-group"><label>URL Situs Final (mis. https://username.github.io/undangan/)</label><input type="text" id="bg-url" placeholder="https://username.github.io/nama-repo/"></div>
+    <div class="field-group"><label>Judul Preview</label><input type="text" id="bg-judul"></div>
+    <div class="field-group"><label>Deskripsi Preview</label><textarea id="bg-desk" rows="2"></textarea></div>
+    <div class="field-group"><label>Gambar Preview (path, disarankan 1200×630)</label><input type="text" id="bg-gambar" placeholder="assets/og.jpg"></div>
+    <p style="font-size:11.5px;color:#777;margin-bottom:10px">Setelah diisi, tekan tombol <b>index.html</b> di atas dan timpa file index.html di folder.</p>
+
+    <div class="section-title" style="margin-top:20px">Koneksi Backend (Google Sheets)</div>
+    <div class="field-group">
+      <label>Web App URL Google Apps Script</label>
+      <input type="text" id="inp-backend-url" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+
+    <div class="section-title">File Musik Background</div>
+    <div class="field-group">
+      <label>Path File MP3</label>
+      <input type="text" id="inp-musik" value="assets/musik.mp3">
+    </div>
+  </div>
+</div>
+
+<!-- Right: Interactive Device Preview -->
+<div id="preview-area">
+  <div id="preview-topbar">
+    <button class="btn-sm btn-outline" id="btn-back-form">← Kembali ke Form</button>
+    <div class="device-btns">
+      <button class="device-btn active" data-d="HP">HP (390×844)</button>
+      <button class="device-btn" data-d="HP ↻">HP Landscape</button>
+      <button class="device-btn" data-d="Tablet">Tablet (768×1024)</button>
+      <button class="device-btn" data-d="PC">PC (1366×768)</button>
+    </div>
+  </div>
+  <div id="iframe-box">
+    <iframe id="pv" src="index.html" title="Live Preview"></iframe>
+  </div>
+</div>
+
+<script src="data/data.js"></script>
+<script>
+// Load Data & Setup Defaults
+const orig = JSON.stringify(window.DATA);
+let D = JSON.parse(orig);
+const DRAF = 'draf-v3';   // kunci baru: draf dari versi editor lama tidak ikut terbawa
+try {
+  const d = localStorage.getItem(DRAF);
+  if (d) D = JSON.parse(d);
+} catch(e) {}
+
+// Lengkapi kunci yang belum ada (draf lama / data.js lama)
+{ const O0 = JSON.parse(orig); Object.keys(O0).forEach(k => { if (D[k] === undefined) D[k] = O0[k]; }); }
+D.warna = D.warna || '#2a161b';
+D.warnaBg = D.warnaBg || '#edeeec';
+D.warnaAksen = D.warnaAksen || '#6b1d2b';
+D.warnaAksen2 = D.warnaAksen2 || '#a9c0da';
+D.warnaCard = D.warnaCard || '#f8f7f4';
+D.warnaDark = D.warnaDark || '';
+D.fontScript = D.fontScript || "'Bodoni Moda', Georgia, serif";
+D.fontSerif = D.fontSerif || "'Plus Jakarta Sans', system-ui, sans-serif";
+D.fontTulis = D.fontTulis || '';
+D.animasi = D.animasi || { jenis: 'none', durasi: 8, jumlah: 14 };
+D.rsvp = D.rsvp || { aktif: true, maksTamu: 4, batas: '' };
+D.dresscode = D.dresscode || { aktif: true, judul: 'Dress code', teks: '', warna: [] };
+D.streaming = D.streaming || { url: '', teks: 'Tonton siaran langsung' };
+D.fotoGaleri = D.fotoGaleri || ['assets/galeri-1.jpg', 'assets/galeri-2.jpg', 'assets/galeri-3.jpg', 'assets/galeri-4.jpg'];
+D.cover = D.cover || { judul: 'Undangan pernikahan', sub: '', tombol: 'Buka undangan' };
+D.backend = D.backend || { url: '' };
+D.bagikan = D.bagikan || { judul: D.judul, deskripsi: 'Kami mengundang Anda ke hari bahagia kami.', gambar: 'assets/og.jpg', urlSitus: '' };
+
+const pv = document.getElementById('pv');
+const box = document.getElementById('iframe-box');
+const dev = { HP: [390, 844], 'HP ↻': [844, 390], Tablet: [768, 1024], PC: [1366, 768] };
+let curDev = 'HP';
+
+// Broadcast live changes to iframe
+const send = () => {
+  pv.contentWindow.postMessage({ type: 'data', data: D }, '*');
+  try { localStorage.setItem(DRAF, JSON.stringify(D)); } catch(e) {}
+};
+
+function fit() {
+  const b = box.getBoundingClientRect();
+  let [w, h] = dev[curDev];
+  if (innerWidth <= 840) { w = b.width; h = b.height; }
+  const s = Math.min(b.width / w, b.height / h, 1);
+  Object.assign(pv.style, {
+    width: w + 'px',
+    height: h + 'px',
+    transform: `scale(${s})`,
+    left: ((b.width - w * s) / 2) + 'px',
+    top: ((b.height - h * s) / 2) + 'px'
+  });
+}
+pv.onload = send;
+addEventListener('resize', fit);
+
+// Device Switcher
+document.querySelectorAll('.device-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    curDev = btn.dataset.d;
+    fit();
+  };
+});
+
+// Mobile View Toggle
+const toggleMobile = () => { document.body.classList.toggle('mobile-pvw'); fit(); };
+document.getElementById('btn-mobile-toggle').onclick = toggleMobile;
+document.getElementById('btn-back-form').onclick = toggleMobile;
+
+// Tab Switcher
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  };
+});
+
+// Helper Image Compressor (Canvas DataURL)
+function compressImage(file, maxDim, cb) {
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, maxDim / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = img.width * s;
+      c.height = img.height * s;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      cb(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.src = r.result;
+  };
+  r.readAsDataURL(file);
+}
+
+// Populate Inputs from D
+function syncForm() {
+  // Warna
+  const setCol = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val.startsWith('#')) el.value = val;
+    const txt = document.getElementById(id + '-val');
+    if (txt) txt.textContent = val;
+  };
+  setCol('c-ink', D.warna);
+  setCol('c-bg', D.warnaBg);
+  setCol('c-gold', D.warnaAksen);
+  setCol('c-gold2', D.warnaAksen2);
+  setCol('c-card', D.warnaCard);
+  document.getElementById('sel-dark-bg').value = D.warnaDark || '';
+
+  // Font
+  document.getElementById('sel-font-script').value = D.fontScript;
+  document.getElementById('sel-font-serif').value = D.fontSerif;
+  document.getElementById('sel-font-tulis').value = D.fontTulis || '';
+
+  // Animasi
+  document.getElementById('sel-anim-jenis').value = D.animasi.jenis || 'petals';
+  document.getElementById('sl-anim-durasi').value = D.animasi.durasi || 8;
+  document.getElementById('val-anim-durasi').textContent = (D.animasi.durasi || 8) + 's';
+  document.getElementById('sl-anim-jumlah').value = D.animasi.jumlah || 14;
+  document.getElementById('val-anim-jumlah').textContent = D.animasi.jumlah || 14;
+
+  // Foto Preview & Slider Posisi
+  document.getElementById('prev-foto-utama').src = D.fotoUtama || '';
+  document.getElementById('prev-foto-wanita').src = D.fotoWanita || '';
+  document.getElementById('prev-foto-pria').src = D.fotoPria || '';
+  document.getElementById('prev-foto-hero').src = D.fotoHero || (D.fotoGaleri || [])[0] || '';
+  const posVal = parseInt(D.fotoPosisi, 10) || 50;
+  document.getElementById('sl-foto-posisi').value = posVal;
+  document.getElementById('val-foto-posisi').textContent = posVal + '%';
+
+  // Render Galeri
+  renderGaleri();
+
+  // Mempelai & Konten
+  document.getElementById('inp-judul').value = D.judul || '';
+  document.getElementById('w-panggilan').value = D.wanita.panggilan || '';
+  document.getElementById('w-lengkap').value = D.wanita.lengkap || '';
+  document.getElementById('w-orangtua').value = D.wanita.orangtua || '';
+  document.getElementById('p-panggilan').value = D.pria.panggilan || '';
+  document.getElementById('p-lengkap').value = D.pria.lengkap || '';
+  document.getElementById('p-orangtua').value = D.pria.orangtua || '';
+  document.getElementById('inp-salam').value = D.salam || '';
+  document.getElementById('inp-cerita').value = D.cerita || '';
+  document.getElementById('inp-penutup').value = D.penutup || '';
+
+  // Acara & Lokasi
+  document.getElementById('inp-tanggal-teks').value = D.tanggalTeks || '';
+  document.getElementById('inp-tanggal-iso').value = D.tanggalISO || '';
+  document.getElementById('lok-nama').value = D.lokasi.nama || '';
+  document.getElementById('lok-alamat').value = D.lokasi.alamat || '';
+  document.getElementById('lok-maps').value = D.lokasi.maps || '';
+  document.getElementById('ayat-sumber').value = D.ayat.sumber || '';
+  document.getElementById('ayat-teks').value = D.ayat.teks || '';
+  document.getElementById('inp-alamat-kado').value = D.alamatKado || '';
+  document.getElementById('inp-backend-url').value = D.backend?.url || '';
+  document.getElementById('inp-musik').value = D.musik || '';
+  document.getElementById('bg-url').value = D.bagikan.urlSitus || '';
+  document.getElementById('bg-judul').value = D.bagikan.judul || '';
+  document.getElementById('bg-desk').value = D.bagikan.deskripsi || '';
+  document.getElementById('bg-gambar').value = D.bagikan.gambar || '';
+  document.getElementById('rsvp-aktif').checked = D.rsvp.aktif !== false;
+  document.getElementById('rsvp-batas').value = D.rsvp.batas || '';
+  document.getElementById('rsvp-maks').value = D.rsvp.maksTamu || 4;
+  document.getElementById('inp-wa').value = D.whatsapp || '';
+  document.getElementById('inp-salam-pembuka').value = D.salamPembuka || '';
+  document.getElementById('inp-stream-url').value = D.streaming.url || '';
+  document.getElementById('inp-stream-teks').value = D.streaming.teks || '';
+  document.getElementById('dc-aktif').checked = D.dresscode.aktif !== false;
+  document.getElementById('dc-judul').value = D.dresscode.judul || '';
+  document.getElementById('dc-teks').value = D.dresscode.teks || '';
+
+  renderDress();
+  renderAcara();
+  renderHadiah();
+  renderKisah();
+}
+
+const E = v => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+// Render Gallery Slots
+function renderGaleri() {
+  const g = document.getElementById('galeri-list');
+  g.innerHTML = '';
+  (D.fotoGaleri || []).forEach((src, idx) => {
+    const slot = document.createElement('div');
+    slot.className = 'gallery-slot';
+    slot.innerHTML = `<img src="${src}"><button title="Hapus foto">✕</button>`;
+    slot.querySelector('button').onclick = () => {
+      D.fotoGaleri.splice(idx, 1);
+      renderGaleri();
+      send();
+    };
+    g.appendChild(slot);
+  });
+}
+
+// Render Acara Cards
+function renderAcara() {
+  const a = document.getElementById('acara-list');
+  a.innerHTML = '';
+  (D.acara || []).forEach((ac, idx) => {
+    const item = document.createElement('div');
+    item.className = 'card-item';
+    item.innerHTML = `
+      <button class="btn-del">Hapus</button>
+      <div class="field-group">
+        <label>Nama Acara</label>
+        <input type="text" class="ac-nama" value="${E(ac.nama)}">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Waktu / Jam</label>
+        <input type="text" class="ac-waktu" value="${E(ac.waktu)}">
+      </div>
+    `;
+    item.querySelector('.btn-del').onclick = () => {
+      D.acara.splice(idx, 1);
+      renderAcara();
+      send();
+    };
+    item.querySelector('.ac-nama').oninput = e => { ac.nama = e.target.value; send(); };
+    item.querySelector('.ac-waktu').oninput = e => { ac.waktu = e.target.value; send(); };
+    a.appendChild(item);
+  });
+}
+
+// Render Hadiah Cards
+function renderHadiah() {
+  const h = document.getElementById('hadiah-list');
+  h.innerHTML = '';
+  (D.hadiah || []).forEach((hd, idx) => {
+    const item = document.createElement('div');
+    item.className = 'card-item';
+    item.innerHTML = `
+      <button class="btn-del">Hapus</button>
+      <div class="field-group">
+        <label>Nama Bank / E-Wallet</label>
+        <input type="text" class="hd-bank" value="${E(hd.bank)}">
+      </div>
+      <div class="field-group">
+        <label>Nomor Rekening</label>
+        <input type="text" class="hd-rek" value="${E(hd.norek)}">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Atas Nama (a.n.)</label>
+        <input type="text" class="hd-an" value="${E(hd.atasNama)}">
+      </div>
+    `;
+    item.querySelector('.btn-del').onclick = () => {
+      D.hadiah.splice(idx, 1);
+      renderHadiah();
+      send();
+    };
+    item.querySelector('.hd-bank').oninput = e => { hd.bank = e.target.value; send(); };
+    item.querySelector('.hd-rek').oninput = e => { hd.norek = e.target.value; send(); };
+    item.querySelector('.hd-an').oninput = e => { hd.atasNama = e.target.value; send(); };
+    h.appendChild(item);
+  });
+}
+
+// Render Dress Code
+function renderDress() {
+  const l = document.getElementById('dc-list');
+  l.innerHTML = '';
+  (D.dresscode.warna = D.dresscode.warna || []).forEach((w, idx) => {
+    const item = document.createElement('div');
+    item.className = 'card-item';
+    item.innerHTML = `
+      <button class="btn-del">Hapus</button>
+      <div class="field-group"><label>Nama Warna</label><input type="text" class="dc-n" value="${E(w.nama)}"></div>
+      <div class="field-group" style="margin-bottom:0"><label>Warna</label><input type="color" class="dc-c" style="width:100%;height:36px;border:1px solid #d0d0d8;border-radius:6px"></div>`;
+    item.querySelector('.dc-c').value = /^#[0-9a-f]{6}$/i.test(w.hex) ? w.hex : '#cccccc';
+    item.querySelector('.btn-del').onclick = () => { D.dresscode.warna.splice(idx, 1); renderDress(); send(); };
+    item.querySelector('.dc-n').oninput = e => { w.nama = e.target.value; send(); };
+    item.querySelector('.dc-c').oninput = e => { w.hex = e.target.value; send(); };
+    l.appendChild(item);
+  });
+}
+document.getElementById('btn-add-dc').onclick = () => {
+  D.dresscode.warna = D.dresscode.warna || [];
+  D.dresscode.warna.push({ nama: 'Warna baru', hex: '#cccccc' });
+  renderDress(); send();
+};
+document.getElementById('dc-aktif').onchange = e => { D.dresscode.aktif = e.target.checked; send(); };
+document.getElementById('rsvp-aktif').onchange = e => { D.rsvp.aktif = e.target.checked; send(); };
+
+// Render Our Story
+function renderKisah() {
+  document.getElementById('ks-judul').value = D.kisahJudul || '';
+  document.getElementById('ks-sub').value = D.kisahSub || '';
+  const list = document.getElementById('kisah-list');
+  list.innerHTML = '';
+  (D.kisah = D.kisah || []).forEach((k, idx) => {
+    const item = document.createElement('div');
+    item.className = 'card-item';
+    item.innerHTML = `
+      <button class="btn-del">Hapus</button>
+      <div class="field-group"><label>Bab ${idx + 1}: Judul</label><input type="text" class="ks-j"></div>
+      <div class="field-group"><label>Cerita</label><textarea class="ks-t" rows="6"></textarea></div>
+      <div class="field-group"><label>Foto (path atau pilih dari perangkat)</label>
+        <input type="text" class="ks-f" placeholder="assets/galeri-1.jpg">
+        <label class="btn-add" style="text-align:center;display:block;margin-top:6px">Pilih foto…<input type="file" class="ks-file" accept="image/*" style="display:none"></label></div>
+      <div class="field-group" style="margin-bottom:0"><label>Fokus foto (bagian yang dipertahankan)</label>
+        <select class="ks-p"><option value="50% 15%">Atas</option><option value="50% 50%">Tengah</option><option value="50% 80%">Bawah</option></select></div>`;
+    const q = c => item.querySelector(c);
+    q('.ks-j').value = k.judul || '';
+    q('.ks-t').value = k.teks || '';
+    q('.ks-f').value = String(k.foto || '').startsWith('data:') ? '[foto tertanam]' : (k.foto || '');
+    const sp = q('.ks-p');
+    if (k.posisi && ![...sp.options].some(o => o.value === k.posisi)) sp.add(new Option('Khusus (' + k.posisi + ')', k.posisi));
+    sp.value = k.posisi || '50% 50%';
+    q('.btn-del').onclick = () => { D.kisah.splice(idx, 1); renderKisah(); send(); };
+    q('.ks-j').oninput = e => { k.judul = e.target.value; send(); };
+    q('.ks-t').oninput = e => { k.teks = e.target.value; send(); };
+    q('.ks-f').oninput = e => { if (e.target.value !== '[foto tertanam]') { k.foto = e.target.value; send(); } };
+    sp.onchange = e => { k.posisi = e.target.value; send(); };
+    q('.ks-file').onchange = e => {
+      const f = e.target.files[0];
+      if (f) compressImage(f, 1200, u => { k.foto = u; q('.ks-f').value = '[foto tertanam]'; send(); });
+    };
+    list.appendChild(item);
+  });
+}
+document.getElementById('ks-judul').oninput = e => { D.kisahJudul = e.target.value; send(); };
+document.getElementById('ks-sub').oninput = e => { D.kisahSub = e.target.value; send(); };
+document.getElementById('btn-add-kisah').onclick = () => {
+  (D.kisah = D.kisah || []).push({ judul: '', teks: '', foto: '', posisi: '50% 50%' });
+  renderKisah(); send();
+};
+
+// Event Listeners for Color Pickers
+const bindCol = (id, key) => {
+  const el = document.getElementById(id);
+  el.oninput = () => {
+    D[key] = el.value;
+    document.getElementById(id + '-val').textContent = el.value;
+    send();
+  };
+};
+bindCol('c-ink', 'warna');
+bindCol('c-bg', 'warnaBg');
+bindCol('c-gold', 'warnaAksen');
+bindCol('c-gold2', 'warnaAksen2');
+bindCol('c-card', 'warnaCard');
+
+document.getElementById('sel-dark-bg').onchange = e => {
+  D.warnaDark = e.target.value;
+  send();
+};
+
+// Preset Themes
+const themes = {
+  marun:    { warna: '#2a161b', warnaBg: '#edeeec', warnaAksen: '#6b1d2b', warnaAksen2: '#a9c0da', warnaCard: '#f8f7f4', warnaDark: '' },
+  rose:     { warna: '#33262a', warnaBg: '#f3eeee', warnaAksen: '#9a4a5a', warnaAksen2: '#d9b8bd', warnaCard: '#faf6f6', warnaDark: '' },
+  sage:     { warna: '#232a25', warnaBg: '#eef0ec', warnaAksen: '#3f5a47', warnaAksen2: '#b7c9b4', warnaCard: '#f8f9f6', warnaDark: '' },
+  navy:     { warna: '#16202e', warnaBg: '#eceef1', warnaAksen: '#1f3556', warnaAksen2: '#c9b27a', warnaCard: '#f7f8fa', warnaDark: '' },
+  charcoal: { warna: '#1d1d1f', warnaBg: '#efefee', warnaAksen: '#2c2c30', warnaAksen2: '#c8a46a', warnaCard: '#f8f8f7', warnaDark: '' }
+};
+document.querySelectorAll('.theme-pill').forEach(pill => {
+  pill.onclick = () => {
+    const t = themes[pill.dataset.theme];
+    if (t) {
+      Object.assign(D, t);
+      syncForm();
+      send();
+    }
+  };
+});
+
+// Font Listeners
+document.getElementById('sel-font-script').onchange = e => { D.fontScript = e.target.value; send(); };
+document.getElementById('sel-font-serif').onchange = e => { D.fontSerif = e.target.value; send(); };
+document.getElementById('sel-font-tulis').onchange = e => { D.fontTulis = e.target.value; send(); };
+
+// Animasi Listeners
+document.getElementById('sel-anim-jenis').onchange = e => {
+  D.animasi = D.animasi || {};
+  D.animasi.jenis = e.target.value;
+  send();
+};
+document.getElementById('sl-anim-durasi').oninput = e => {
+  D.animasi = D.animasi || {};
+  D.animasi.durasi = +e.target.value;
+  document.getElementById('val-anim-durasi').textContent = e.target.value + 's';
+  send();
+};
+document.getElementById('sl-anim-jumlah').oninput = e => {
+  D.animasi = D.animasi || {};
+  D.animasi.jumlah = +e.target.value;
+  document.getElementById('val-anim-jumlah').textContent = e.target.value;
+  send();
+};
+
+// Photo Uploads
+document.getElementById('file-foto-utama').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  compressImage(f, 1200, res => {
+    D.fotoUtama = res;
+    document.getElementById('prev-foto-utama').src = res;
+    send();
+  });
+};
+document.getElementById('file-foto-hero').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  compressImage(f, 1200, res => {
+    D.fotoHero = res;
+    document.getElementById('prev-foto-hero').src = res;
+    send();
+  });
+};
+document.getElementById('file-foto-wanita').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  compressImage(f, 600, res => {
+    D.fotoWanita = res;
+    document.getElementById('prev-foto-wanita').src = res;
+    send();
+  });
+};
+document.getElementById('file-foto-pria').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  compressImage(f, 600, res => {
+    D.fotoPria = res;
+    document.getElementById('prev-foto-pria').src = res;
+    send();
+  });
+};
+
+// Gallery Upload
+document.getElementById('file-foto-galeri').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  compressImage(f, 900, res => {
+    D.fotoGaleri = D.fotoGaleri || [];
+    D.fotoGaleri.push(res);
+    renderGaleri();
+    send();
+  });
+};
+
+// Foto Utama Repositioning Slider
+document.getElementById('sl-foto-posisi').oninput = e => {
+  const val = e.target.value + '%';
+  D.fotoPosisi = val;
+  document.getElementById('val-foto-posisi').textContent = val;
+  send();
+};
+
+// Content Text Listeners
+const bindInp = (id, fn) => {
+  const el = document.getElementById(id);
+  el.oninput = () => { fn(el.value); send(); };
+};
+bindInp('inp-judul', v => D.judul = v);
+bindInp('w-panggilan', v => D.wanita.panggilan = v);
+bindInp('w-lengkap', v => D.wanita.lengkap = v);
+bindInp('w-orangtua', v => D.wanita.orangtua = v);
+bindInp('p-panggilan', v => D.pria.panggilan = v);
+bindInp('p-lengkap', v => D.pria.lengkap = v);
+bindInp('p-orangtua', v => D.pria.orangtua = v);
+bindInp('inp-salam', v => D.salam = v);
+bindInp('inp-cerita', v => D.cerita = v);
+bindInp('inp-penutup', v => D.penutup = v);
+bindInp('inp-tanggal-teks', v => D.tanggalTeks = v);
+bindInp('inp-tanggal-iso', v => D.tanggalISO = v);
+bindInp('lok-nama', v => D.lokasi.nama = v);
+bindInp('lok-alamat', v => D.lokasi.alamat = v);
+bindInp('lok-maps', v => D.lokasi.maps = v);
+bindInp('ayat-sumber', v => D.ayat.sumber = v);
+bindInp('ayat-teks', v => D.ayat.teks = v);
+bindInp('inp-alamat-kado', v => D.alamatKado = v);
+bindInp('inp-backend-url', v => { D.backend = D.backend || {}; D.backend.url = v; });
+bindInp('inp-musik', v => D.musik = v);
+bindInp('bg-url', v => D.bagikan.urlSitus = v.trim());
+bindInp('bg-judul', v => D.bagikan.judul = v);
+bindInp('bg-desk', v => D.bagikan.deskripsi = v);
+bindInp('bg-gambar', v => D.bagikan.gambar = v.trim());
+bindInp('rsvp-batas', v => D.rsvp.batas = v);
+bindInp('rsvp-maks', v => D.rsvp.maksTamu = Math.min(10, Math.max(1, parseInt(v, 10) || 4)));
+bindInp('inp-wa', v => D.whatsapp = v.replace(/\D/g, ''));
+bindInp('inp-salam-pembuka', v => D.salamPembuka = v);
+bindInp('inp-stream-url', v => D.streaming.url = v.trim());
+bindInp('inp-stream-teks', v => D.streaming.teks = v);
+bindInp('dc-judul', v => D.dresscode.judul = v);
+bindInp('dc-teks', v => D.dresscode.teks = v);
+
+// Add Acara & Hadiah
+document.getElementById('btn-add-acara').onclick = () => {
+  D.acara = D.acara || [];
+  D.acara.push({ nama: 'Acara Baru', waktu: 'Pukul 09.00 WIB s.d. selesai' });
+  renderAcara();
+  send();
+};
+document.getElementById('btn-add-hadiah').onclick = () => {
+  D.hadiah = D.hadiah || [];
+  D.hadiah.push({ bank: 'Bank BCA', norek: '1234567890', atasNama: D.wanita.panggilan || '' });
+  renderHadiah();
+  send();
+};
+
+// Reset
+document.getElementById('btn-reset').onclick = () => {
+  if (confirm('Kembalikan semua pengaturan ke data asli?')) {
+    D = JSON.parse(orig);
+    syncForm();
+    send();
+  }
+};
+
+// Export data.js
+document.getElementById('btn-save').onclick = () => {
+  const content = 'window.DATA = ' + JSON.stringify(D, null, 2) + ';\n';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'application/javascript' }));
+  a.download = 'data.js';
+  a.click();
+};
+
+// Export index.html
+document.getElementById('btn-export-html').onclick = () => {
+  const b = D.bagikan || {};
+  const u = (b.urlSitus || '').replace(/\/?$/, '/');
+  const A = s => /^https?:/.test(s) ? s : u + s.replace(/^\.?\//, '');
+  const e = s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  const h = `<!doctype html><html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<meta name="theme-color" content="${e(D.warnaBg || '#edeeec')}"><meta name="robots" content="noindex">
+<title>${e(D.judul)}</title>
+<meta property="og:type" content="website"><meta property="og:title" content="${e(b.judul || D.judul)}"><meta property="og:description" content="${e(b.deskripsi || 'Kami mengundang Anda ke hari bahagia kami.')}">
+<meta property="og:image" content="${e(A(b.gambar || 'assets/og.jpg'))}"><meta property="og:url" content="${e(u)}"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Ctext y='7' font-size='7'%3E♡%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/bodoni-moda-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css"></head>
+<body class="lock"><div id="app"></div>
+<button id="mu" aria-label="Putar atau hentikan musik" aria-pressed="false" hidden></button><audio id="au" loop preload="none"></audio>
+<noscript><p style="padding:32px;font:16px/1.6 system-ui">Undangan ini membutuhkan JavaScript. Mohon aktifkan JavaScript atau buka lewat browser lain.</p></noscript>
+<script src="data/data.js"><\/script><script src="js/app.js"><\/script></body></html>\n`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([h], { type: 'text/html' }));
+  a.download = 'index.html';
+  a.click();
+};
+
+// Link Tamu Massal Generator
+document.getElementById('gb').onclick = () => {
+  const base = document.getElementById('bu').value.trim() || (D.bagikan && D.bagikan.urlSitus || '').trim() || location.href.replace('editor.html', '');
+  const u = base.replace(/\/?$/, '/') + 'index.html';
+  const names = document.getElementById('gl').value.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!names.length) return alert('Tuliskan minimal satu nama tamu terlebih dahulu.');
+  const result = names.map(n => `${n}\t${u}?to=${encodeURIComponent(n)}`).join('\n');
+  navigator.clipboard.writeText(result);
+  document.getElementById('gb').textContent = 'Tersalin ke Clipboard! ✓';
+  setTimeout(() => document.getElementById('gb').textContent = 'Salin Semua Link Tamu', 2500);
+};
+
+// Initial Setup
+syncForm();
+fit();
+</script>
+</body>
+</html>

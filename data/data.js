@@ -1,7 +1,6 @@
 window.DATA = {
   "judul": "The Wedding of Nadia & Raka",
   "musik": "assets/musik.mp3",
-
   "warna": "#2a161b",
   "warnaBg": "#edeeec",
   "warnaAksen": "#6b1d2b",
@@ -9,7 +8,6 @@ window.DATA = {
   "warnaCard": "#f8f7f4",
   "fontScript": "'Bodoni Moda', Georgia, serif",
   "fontSerif": "'Plus Jakarta Sans', system-ui, sans-serif",
-
   "fotoUtama": "assets/foto-utama.jpg",
   "fotoHero": "assets/galeri-1.jpg",
   "fotoWanita": "assets/foto-wanita.jpg",
@@ -20,14 +18,12 @@ window.DATA = {
     "assets/galeri-3.jpg",
     "assets/galeri-4.jpg"
   ],
-
   "cover": {
     "judul": "Undangan pernikahan",
     "sub": "Kami menantikan kehadiran Anda",
     "tombol": "Buka undangan"
   },
   "whatsapp": "6281234567890",
-
   "wanita": {
     "panggilan": "Nadia",
     "lengkap": "Nadia Putri Anjani",
@@ -38,27 +34,30 @@ window.DATA = {
     "lengkap": "Raka Aditya Pratama",
     "orangtua": "Putra dari Bapak Wijaya dan Ibu Lestari"
   },
-
   "tanggalISO": "2026-12-20T08:00:00+07:00",
   "tanggalTeks": "Minggu, 20 Desember 2026",
   "salamPembuka": "Assalamu’alaikum Warahmatullahi Wabarakatuh",
   "salam": "Dengan berkah dan rahmat Allah SWT, kami bermaksud mengundang Anda untuk menghadiri pernikahan kami.",
-  "cerita": "Pertemuan sederhana itu perlahan menjadi sesuatu yang berarti. Kami menemukan ketenangan dalam satu sama lain, dan kini kami ingin memulai perjalanan baru bersama.",
+  "cerita": "",
   "ayat": {
     "teks": "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan untukmu agar kamu merasa tenteram kepadanya.",
     "sumber": "QS. Ar-Rum: 21"
   },
-
   "acara": [
-    { "nama": "Akad Nikah", "waktu": "Pukul 08.00 WIB s.d. selesai" },
-    { "nama": "Resepsi", "waktu": "Pukul 11.00 WIB s.d. selesai" }
+    {
+      "nama": "Akad Nikah",
+      "waktu": "Pukul 08.00 WIB s.d. selesai"
+    },
+    {
+      "nama": "Resepsi",
+      "waktu": "Pukul 11.00 WIB s.d. selesai"
+    }
   ],
   "lokasi": {
     "nama": "Gedung Serbaguna Melati",
     "alamat": "Jl. Merdeka No. 12, Tegal, Jawa Tengah",
     "maps": "https://maps.google.com"
   },
-
   "kisahJudul": "Perjalanan kami",
   "kisahSub": "Dari dua langkah menjadi satu tujuan",
   "kisah": [
@@ -82,40 +81,66 @@ window.DATA = {
       "teks": "Ketika rasa telah matang dan doa menemukan muaranya, kami memberanikan diri melangkah menuju ikatan yang lebih suci. Di hadapan keluarga dan restu yang menenangkan, niat baik terucap dengan penuh harapan. Kali ini bukan sekadar janji yang diikat, melainkan awal dari perjalanan panjang untuk saling menjaga, menguatkan, dan melangkah menuju ridha-Nya."
     }
   ],
-
   "dresscode": {
     "aktif": true,
     "judul": "Dress code",
     "teks": "Kami akan senang bila Anda berkenan mengenakan salah satu warna berikut.",
     "warna": [
-      { "nama": "Marun", "hex": "#6b1d2b" },
-      { "nama": "Biru debu", "hex": "#a9c0da" },
-      { "nama": "Camel", "hex": "#d3bb86" }
+      {
+        "nama": "Marun",
+        "hex": "#6b1d2b"
+      },
+      {
+        "nama": "Biru debu",
+        "hex": "#a9c0da"
+      },
+      {
+        "nama": "Camel",
+        "hex": "#d3bb86"
+      }
     ]
   },
-  "streaming": { "url": "", "teks": "Tonton siaran langsung" },
-
+  "streaming": {
+    "url": "",
+    "teks": "Tonton siaran langsung"
+  },
   "rsvp": {
     "aktif": true,
     "maksTamu": 4,
     "batas": "Mohon konfirmasi sebelum 10 Desember 2026."
   },
-
   "hadiah": [
-    { "bank": "Bank BRI", "norek": "1234567890", "atasNama": "Nadia Putri Anjani" },
-    { "bank": "Bank BCA", "norek": "0987654321", "atasNama": "Raka Aditya Pratama" }
+    {
+      "bank": "Bank BRI",
+      "norek": "1234567890",
+      "atasNama": "Nadia Putri Anjani"
+    },
+    {
+      "bank": "Bank BCA",
+      "norek": "0987654321",
+      "atasNama": "Raka Aditya Pratama"
+    }
   ],
   "alamatKado": "Jl. Merdeka No. 12, Tegal",
   "penutup": "Merupakan kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Terima kasih.",
-
-  "backend": { "url": "" },
+  "backend": {
+    "url": ""
+  },
   "bagikan": {
     "judul": "The Wedding of Nadia & Raka",
     "deskripsi": "Kami mengundang Anda ke hari bahagia kami. Minggu, 20 Desember 2026.",
     "gambar": "assets/og.jpg",
     "urlSitus": "https://USERNAME.github.io/NAMA-REPO/"
   },
-  "kredit": { "teks": "", "url": "" },
-
-  "animasi": { "jenis": "none", "durasi": 8, "jumlah": 14 }
+  "kredit": {
+    "teks": "",
+    "url": ""
+  },
+  "animasi": {
+    "jenis": "petals",
+    "durasi": 8,
+    "jumlah": 20
+  },
+  "warnaDark": "",
+  "fontTulis": ""
 };
